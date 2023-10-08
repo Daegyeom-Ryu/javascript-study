@@ -51,11 +51,16 @@ console.log(subtract('', null)); // 0
 // ...rest 연산자 사용, 원하는 만큼 인자들을 받아 합쳐서 numbers 배열에 집어넣는다.
 // ...rest 연산자는 맨 뒤에만 올 수 있고, 하나만 사용될 수 있다.
 const sumUp = (a, b, ...numbers) => {
+  const validateNumber = (number) => {
+    return isNaN(number) ? 0 : number;
+  };
   let sum = 0;
-  numbers.forEach((number) => (sum += number));
+  numbers.forEach((number) => {
+    sum += validateNumber(number);
+  });
   return sum;
 };
-console.log(sumUp(1, 5, 10, -3, 6, 10, 25, 88));
+console.log(sumUp(1, 5, 'sdfsf', NaN, -3, 6, 10, 25, 88));
 // function 키워드로 만든 함수에서는 ...rest 연산자도 사용되지만, ES6 이전에는 arguments라는 것을 사용했다.
 const subtractUp = function () {
   let sum = 0;
@@ -66,3 +71,13 @@ const subtractUp = function () {
   return sum;
 };
 console.log(subtractUp(1, 5, 10, -3, 6, 10, 25, 88));
+
+// bind란? 함수의 인자를 사전구성할 때 사용하는 함수
+// bind의 사용 예시
+const noticeToSeller = (sex, age) => {
+  console.log(`This ${sex} age is ${age}`);
+};
+const barcode = (resultHandler, age) => {
+  resultHandler(age);
+};
+barcode(noticeToSeller.bind(this, 'male'), 30);
