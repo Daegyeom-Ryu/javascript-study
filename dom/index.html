@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM study</title>
+    <script src="accessToObject.js" defer></script>
+    <style>
+      .red-bg {
+        background-color: red;
+        color: white;
+      }
+      .visible {
+        display: block;
+      }
+      .invisible {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header><h1 id="main-title">Dive into the DOM!!</h1></header>
+    <section class="red-bg">
+      <ul>
+        <li>item1</li>
+        <li class="list-item">item2</li>
+        <li class="list-item">item3</li>
+      </ul>
+    </section>
+    <button>Toggle Visibility</button>
+    <input id="input-id" class="input-class" value="hello input" />
+  </body>
+</html>
