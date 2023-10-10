@@ -18,14 +18,28 @@ divForInsert.insertAdjacentHTML('beforeend', '<p>something went wrong!</p>');
 // ---------------------------------------------------------------------------------
 // 객체 생성 후 삽입하는 방법 -> createElement
 const newLi = document.createElement('li');
-newLi.textContent = 'item5';
+newLi.textContent = 'item6';
 const newLi2 = document.createElement('li');
 newLi2.textContent = 'item0';
 // appendChild(), append(), prepend()
 // append(), prepend() 사용시 텍스트 노드, 요소 노드 둘 다 가능 & 복수의 요소 노드 삽입 가능
 listForInsert.appendChild(newLi);
-
-// prepend(), before(), after()
 listForInsert.prepend(newLi2);
 
-// replaceWith()
+// replaceWith() // 교환이 아닌 교체를 의미
+const newLi3 = document.createElement('li');
+newLi3.textContent = 'new-item0';
+listForInsert.firstElementChild.replaceWith(newLi3);
+
+// before(), after()
+// 선택된 요소의 앞,뒤에 삽입하는데 삽입할 요소가 이미 dom에 포함되어 있으면 위치만 이동하게 된다.
+const newLi4 = document.createElement('li');
+newLi4.textContent = 'item5';
+listForInsert.lastElementChild.after(newLi4);
+listForInsert.lastElementChild.after(newLi);
+
+// insertAdjacentElement 사용
+const thirdLi = listForInsert.children[3];
+const newLi5 = document.createElement('li');
+newLi5.textContent = 'item3-1';
+thirdLi.insertAdjacentElement('afterend', newLi5);
