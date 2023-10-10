@@ -43,3 +43,7 @@ const thirdLi = listForInsert.children[3];
 const newLi5 = document.createElement('li');
 newLi5.textContent = 'item3-1';
 thirdLi.insertAdjacentElement('afterend', newLi5);
+
+// 복사해서 삽입하기
+const newLi6 = newLi.cloneNode(true); // default:false(깊은복사->후손포함X), true(얉은복사->후손까지)
+listForInsert.append(newLi6);
