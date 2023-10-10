@@ -47,3 +47,8 @@ thirdLi.insertAdjacentElement('afterend', newLi5);
 // 복사해서 삽입하기
 const newLi6 = newLi.cloneNode(true); // default:false(깊은복사->후손포함X), true(얉은복사->후손까지)
 listForInsert.append(newLi6);
+
+// 바로 삭제하기
+newLi5.remove();
+// 부모로 가서 삭제하기
+newLi6.parentElement.removeChild(newLi6);

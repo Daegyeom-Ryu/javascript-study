@@ -1,0 +1,16 @@
+const nonLiveNodeList = document.querySelectorAll('li');
+const liveNodeList = document.getElementsByTagName('li');
+
+const insertedLi = document.createElement('li');
+insertedLi.textContent = 'item7';
+
+const insertedList = document.querySelector('ul');
+insertedList.append(insertedLi);
+
+// querySelectorAll로 fetching하면 추가요소는 반영되지 않는다. -> nonLiveNodeList
+// 단, snapshot으로 찍은 내부 요소들은 전부 객체이다, 내부 요소들 변경시에는 반영된 걸 볼 수 있다.
+// getElementsByX로 fetching하면 추가요소도 확인 가능 -> liveNodeList
+
+insertedList.firstElementChild.textContent = 'item0';
+console.dir(nonLiveNodeList); // 추가요소 안나옴, 변경요소 나옴
+console.dir(liveNodeList); // 추가요소, 변경요소 나옴
