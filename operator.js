@@ -32,3 +32,19 @@ console.log(deepCopyPersons);
 
 const nums = [1, -1, 2, 10, -5];
 console.log(Math.min(...nums)); // spread 연산자를 써서 인자로 넣을 수도 있다.
+
+// rest operator -> spread랑 다르게 남은 녀석들을 모아서 배열(객체)로 만든다.
+const personInfo = ['Ryu', 'DaeGyeom', 'Mr', 30];
+// 배열 분할하기
+const [firstName, lastName, ...restInfo] = personInfo;
+console.log(firstName, lastName, restInfo);
+
+// 객체 분할하기
+// const personInfoKeyValue = {
+//   first: 'Ryu',
+//   last: 'Daegyeom',
+//   sex: 'Mr',
+//   age: 30,
+// };
+// const { first, last, ...rest } = personInfoKeyValue;
+// console.log(first, last, rest);
