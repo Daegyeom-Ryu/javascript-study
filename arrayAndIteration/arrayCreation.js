@@ -1,5 +1,5 @@
-// iterable: for ... of... 사용 가능한 객체(=== Symbol.iterator) (array, nodeList, string, Map, Set)
-// array-like: 길이를 갖고, 인덱스로 접근 가능 (nodeList, string ...)
+// iterable: for ... of... 사용 가능한 객체(=== Symbol.iterator) (array, nodeList, string, Maps, Sets)
+// array-like: 길이를 갖고, 인덱스로 접근 가능 (nodeList, HTMLCollection, string ...)
 
 const array = [1, 2, 3]; // [1, 2, 3]
 const array1 = new Array(1, 2, 3); // [1, 2, 3]
