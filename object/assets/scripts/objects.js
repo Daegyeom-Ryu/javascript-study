@@ -37,7 +37,7 @@ const renderMovies = (filter = '') => {
     // call과 apply의 차이점은 this 자리 뒤에 들어갈 인자 차이 call: 여러 인자, apply: 여러 인자들이 포함된 배열
     let text = getFormattedTitle.call(movie) + ' - ';
     for (const key in info) {
-      if (key !== 'title') {
+      if (key !== 'title' && key !== '_title') {
         text += `${key} : ${info[key]}`;
       }
     }
@@ -50,15 +50,30 @@ const addMovieHandler = () => {
   const extraName = document.getElementById('extra-name').value;
   const extraValue = document.getElementById('extra-value').value;
   if (
-    title.trim() === '' ||
+    // title.trim() === '' ||
     extraName.trim() === '' ||
     extraValue.trim() === ''
   )
     return;
   const newMovie = {
+    // info: {
+    //   title,
+    //   [extraName]: extraValue,
+    // },
     info: {
-      title,
       [extraName]: extraValue,
+      set title(val) {
+        if (val.trim() === '') {
+          this._title = 'DEFAULT';
+          console.log(this);
+          return;
+        }
+        this._title = val;
+        console.log(this);
+      },
+      get title() {
+        return this._title.toUpperCase();
+      },
     },
     id: Math.random().toString(),
     getFormattedTitle: function () {
@@ -69,12 +84,13 @@ const addMovieHandler = () => {
     //   return this.info.title.toUpperCase();
     // },
   };
+  newMovie.info.title = title;
   movies.push(newMovie);
   renderMovies();
 };
 // const searchMovieHandler = () => {
 const searchMovieHandler = function () {
-  // console.log(this);
+  console.log(this);
   const filterTerm = document.getElementById('filter-title').value;
   renderMovies(filterTerm);
 };
@@ -85,3 +101,24 @@ searchBtn.addEventListener('click', searchMovieHandler);
 
 // 일반 함수로 만들면 함수 호출 주체가 this가 된다.
 // 화살표 함수는 엄격모드, 비엄격모드 상관없이 this를 모른다.
+
+// 화살표 함수의 유용한 점
+const members = {
+  teamName: 'Blue Rockets',
+  people: ['Max', 'Manuel'],
+  getTeamMembers() {
+    // forEach는 함수를 실행하는 주체인데, function 키워드로 생성한 함수에
+    // this를 바인딩하지 않는다. 따라서 전역 객체인 window가 this가 되어
+    // this.teamName은 undefined가 되어 버림.
+    // this.people.forEach(function (p) {
+    //   console.log(p + ' - ' + this.teamName);
+    // });
+    // 화살표 함수 사용시에 this는 함수 외부 this를 참조하는데,
+    // 이때 this는 getTeamMembers의 실행 주체인 members이다.
+    // this.teamName은 'Blue Rockets'
+    this.people.forEach((p) => {
+      console.log(p + ' - ' + this.teamName);
+    });
+  },
+};
+// members.getTeamMembers();
