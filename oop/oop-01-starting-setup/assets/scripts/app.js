@@ -6,13 +6,84 @@ class Product {
     this.description = description;
   }
 }
-class ProductItem {
-  constructor(product) {
-    this.product = product;
+class ElementAttributes {
+  constructor(attrName, attrValue) {
+    this.name = attrName;
+    this.value = attrValue;
+  }
+}
+class Component {
+  constructor(renderHookId, shouldRender = true) {
+    this.hookId = renderHookId;
+    if (shouldRender) {
+      this.render();
+    }
+  }
+  render() {}
+  createElement(tag, cssClasses, attributes) {
+    const rootElement = document.createElement(tag);
+    if (cssClasses) {
+      rootElement.className = cssClasses;
+    }
+    if (attributes && attributes.length > 0) {
+      for (const attr of attributes) {
+        rootElement.setAttribute(attr.name, attr.value);
+      }
+    }
+    document.getElementById(this.hookId).append(rootElement);
+    return rootElement;
+  }
+}
+class ShoppingCart extends Component {
+  items = [];
+  set cartItems(value) {
+    this.items = value;
+    this.totalOutput.innerHTML = `<h2>Total: \$${this.totalAmount.toFixed(
+      2
+    )}</h2>`;
+  }
+  get totalAmount() {
+    const sum = this.items.reduce(
+      (prevValue, currItem) => prevValue + currItem.price,
+      0
+    );
+    return sum;
+  }
+  addProduct(product) {
+    const updatedItems = [...this.items];
+    updatedItems.push(product);
+    this.cartItems = updatedItems;
+    // this.totalOutput.innerHTML = `<h2>Total: \$${this.totalAmount}</h2>`;
+  }
+  constructor(renderHookId) {
+    super(renderHookId);
   }
   render() {
-    const prodEl = document.createElement('li');
-    prodEl.className = 'product-item';
+    // this.hookId
+    const cartEl = this.createElement('section', 'cart');
+    // const cartEl = document.createElement('section');
+    // cartEl.className = 'cart';
+    cartEl.innerHTML = `
+      <h2>\$${0}</h2>
+      <button>Order Now!</button>`;
+    this.totalOutput = cartEl.querySelector('h2');
+    // return cartEl;
+  }
+}
+class ProductItem extends Component {
+  constructor(product, renderHookId) {
+    super(renderHookId, false);
+    this.product = product;
+    this.render();
+  }
+  addToCart() {
+    console.log('adding product to cart');
+    // eventListener에서 addToCart를 호출하는 주체는 button;
+    // 해결책은 eventListener에서 this(ProductItem의 인스턴스)를 넘기면 된다.
+    App.addProductToCart(this.product);
+  }
+  render() {
+    const prodEl = this.createElement('li', 'product-item');
     prodEl.innerHTML = `<div>
             <img src= "${this.product.imageUrl}" alt = "${this.product.title}">
             <div class = "product-item__content">
@@ -22,27 +93,66 @@ class ProductItem {
                 <button>Add to Cart</button>
             </div>
         </div>`;
-    return prodEl;
+    const addCartBtn = prodEl.querySelector('button');
+    addCartBtn.addEventListener('click', this.addToCart.bind(this));
   }
 }
-class ProductList {
-  products = [
-    new Product('A Pillow', 'image URL of Pillow', 19.99, 'Soft Pillow!'),
-    new Product('A Carpet', 'image URL of Carpet', 89.99, 'Carpet!'),
-  ];
-  constructor() {}
-  render() {
-    const renderHook = document.getElementById('app');
-    const prodList = document.createElement('ul');
-    prodList.className = 'product-list';
+class ProductList extends Component {
+  products = [];
+  constructor(renderHookId) {
+    super(renderHookId);
+    this.fetchProducts();
+  }
+  fetchProducts() {
+    this.products = [
+      // Field는 property로 변한다. this.products
+      new Product('A Pillow', 'image URL of Pillow', 19.99, 'Soft Pillow!'),
+      new Product('A Carpet', 'image URL of Carpet', 89.99, 'Carpet!'),
+    ];
+    this.renderProducts();
+  }
+  renderProducts() {
     for (const prod of this.products) {
-      const productItem = new ProductItem(prod);
-      const prodEl = productItem.render();
-      prodList.append(prodEl);
+      new ProductItem(prod, 'prod-list');
     }
-    renderHook.append(prodList);
+  }
+  render() {
+    this.createElement('ul', 'product-list', [
+      new ElementAttributes('id', 'prod-list'),
+    ]);
+    if (this.products && this.products.length > 0) {
+      this.renderProducts();
+    }
   }
 }
+class Shop {
+  constructor() {
+    this.render();
+  }
+  render() {
+    // this.hookId = renderHook;
 
-const productList = new ProductList();
-productList.render();
+    // const cart = new ShoppingCart();
+    this.cart = new ShoppingCart('app');
+    // this.cart.render();
+    new ProductList('app');
+    // const prodListEl = productList.render();
+    // productList.render();
+    // renderHook.append(prodListEl);
+
+    // renderHook.append(prodListEl);
+  }
+}
+class App {
+  static cart; // 필수는 아니지만 가독성 향상
+  static init() {
+    // new keyword는 객체 생성이 완료되었는지 확인한다.
+    // 부모 class의 생성자 함수는 생성 중인 하위 class의 객체(this)를 참조한다.
+    const shop = new Shop();
+    this.cart = shop.cart;
+  }
+  static addProductToCart(product) {
+    this.cart.addProduct(product);
+  }
+}
+App.init();
