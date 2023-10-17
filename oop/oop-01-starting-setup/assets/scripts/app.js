@@ -49,25 +49,35 @@ class ShoppingCart extends Component {
     );
     return sum;
   }
+  constructor(renderHookId) {
+    super(renderHookId, false);
+    this.orderProducts = () => {
+      console.log('ordering');
+      console.log(this.items);
+    };
+    this.render();
+  }
   addProduct(product) {
     const updatedItems = [...this.items];
     updatedItems.push(product);
     this.cartItems = updatedItems;
     // this.totalOutput.innerHTML = `<h2>Total: \$${this.totalAmount}</h2>`;
   }
-  constructor(renderHookId) {
-    super(renderHookId);
-  }
+  // orderProducts() {
+  //   console.log('ordering...');
+  //   console.log(this.items);
+  // }
+
   render() {
-    // this.hookId
     const cartEl = this.createElement('section', 'cart');
-    // const cartEl = document.createElement('section');
-    // cartEl.className = 'cart';
     cartEl.innerHTML = `
       <h2>\$${0}</h2>
       <button>Order Now!</button>`;
+    const orderBtn = cartEl.querySelector('button');
+    // orderBtn.addEventListener('click', this.orderProducts.bind(this));
+    // orderBtn.addEventListener('click', () => this.orderProducts());
+    orderBtn.addEventListener('click', this.orderProducts);
     this.totalOutput = cartEl.querySelector('h2');
-    // return cartEl;
   }
 }
 class ProductItem extends Component {
@@ -98,21 +108,22 @@ class ProductItem extends Component {
   }
 }
 class ProductList extends Component {
-  products = [];
+  // #은 private을 의미, 해당 클래스 내에서만 사용할 수 있다.
+  #products = []; // field는 생성자 함수 호출 후 property가 된다.
   constructor(renderHookId) {
-    super(renderHookId);
-    this.fetchProducts();
+    super(renderHookId, false); // super()는 먼저 호출되어야 한다.(rule)
+    this.render();
+    this.#fetchProducts();
   }
-  fetchProducts() {
-    this.products = [
-      // Field는 property로 변한다. this.products
+  #fetchProducts() {
+    this.#products = [
       new Product('A Pillow', 'image URL of Pillow', 19.99, 'Soft Pillow!'),
       new Product('A Carpet', 'image URL of Carpet', 89.99, 'Carpet!'),
     ];
     this.renderProducts();
   }
   renderProducts() {
-    for (const prod of this.products) {
+    for (const prod of this.#products) {
       new ProductItem(prod, 'prod-list');
     }
   }
@@ -120,7 +131,7 @@ class ProductList extends Component {
     this.createElement('ul', 'product-list', [
       new ElementAttributes('id', 'prod-list'),
     ]);
-    if (this.products && this.products.length > 0) {
+    if (this.#products && this.#products.length > 0) {
       this.renderProducts();
     }
   }
