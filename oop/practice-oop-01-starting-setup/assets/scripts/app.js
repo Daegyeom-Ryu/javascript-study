@@ -11,8 +11,53 @@ class DOMHelper {
     destinationElement.append(element); // append는 복사가 아니라 이동
   }
 }
-class ToolTip {}
+class Component {
+  constructor(hostElementId, insertBefore = false) {
+    if (hostElementId) {
+      this.hostElement = document.getElementById(hostElementId);
+    } else {
+      this.hostElement = document.body;
+    }
+    this.insertBefore = insertBefore;
+  }
+  detach() {
+    this.element.remove();
+  }
+  attach() {
+    this.hostElement.insertAdjacentElement(
+      this.insertBefore ? 'beforebegin' : 'beforeend',
+      this.element
+    );
+  }
+}
+class ToolTip extends Component {
+  constructor(closeNotifierFunc, parentId) {
+    super(parentId);
+    this.closeNotifier = closeNotifierFunc;
+    this.create();
+  }
+  closeToolTip = () => {
+    this.detach();
+    this.closeNotifier();
+  };
+  detach() {
+    this.element.remove();
+  }
+  create() {
+    const toolTipElement = document.createElement('div');
+    toolTipElement.className = 'card';
+    toolTipElement.textContent = 'DUMMY';
+    // toolTipElement.textContent =
+    //   this.hostElement === document.body
+    //     ? 'DUMMY'
+    // : this.hostElement.getAttribute('data-extra-info');
+    toolTipElement.addEventListener('click', this.closeToolTip);
+    this.element = toolTipElement;
+    this.attach();
+  }
+}
 class ProjectItem {
+  hasActiveToolTip = false;
   constructor(id, updateProjectListsFunc, type) {
     this.id = id;
     this.updateProjectsHandler = updateProjectListsFunc;
@@ -20,9 +65,18 @@ class ProjectItem {
     this.connectMoreInfoBtn();
     this.connectSwitchBtn(this.type);
   }
+  showMoreInfoHandler() {
+    // console.log(this); // 여기서 this는 button
+    if (this.hasActiveToolTip) return;
+    new ToolTip(() => {
+      this.hasActiveToolTip = false;
+    }, this.id);
+    this.hasActiveToolTip = true;
+  }
   connectMoreInfoBtn() {
     const projectElem = document.getElementById(this.id);
     const moreInfoBtn = projectElem.querySelector('button:first-of-type');
+    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler.bind(this));
   }
   connectSwitchBtn(type) {
     const projectElem = document.getElementById(this.id);
@@ -53,7 +107,6 @@ class ProjectList {
 
   addProject(project) {
     this.projects.push(project);
-    console.log(this.projects);
     DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
     project.update(this.switchProject.bind(this), this.type);
   }
