@@ -9,6 +9,7 @@ class DOMHelper {
     const element = document.getElementById(elementId);
     const destinationElement = document.querySelector(newDestinationSelector);
     destinationElement.append(element); // append는 복사가 아니라 이동
+    element.scrollIntoView({ behavior: 'smooth' }); // safari는 스무스한 움직임 지원 X
   }
 }
 class Component {
@@ -31,29 +32,42 @@ class Component {
   }
 }
 class ToolTip extends Component {
-  constructor(closeNotifierFunc, parentId) {
-    super(parentId);
+  constructor(closeNotifierFunc, text, hostElementId) {
+    super(hostElementId);
     this.closeNotifier = closeNotifierFunc;
+    this.text = text;
     this.create();
   }
   closeToolTip = () => {
     this.detach();
     this.closeNotifier();
   };
-  detach() {
-    this.element.remove();
-  }
   create() {
     const toolTipElement = document.createElement('div');
     toolTipElement.className = 'card';
-    toolTipElement.textContent = 'DUMMY';
-    // toolTipElement.textContent =
-    //   this.hostElement === document.body
-    //     ? 'DUMMY'
-    // : this.hostElement.getAttribute('data-extra-info');
+    // template 태그는 렌더링되지는 않지만 DOM에 포함되어 있다.
+    // importNode는 외부 문서에서 노드를 가져오는 기능
+    const toolTipTemplate = document.getElementById('tooltip');
+    // template 태그의 내용은 .content로 접근 가능
+    const toolTipBody = document.importNode(toolTipTemplate.content, true);
+    toolTipBody.querySelector('p').textContent = this.text;
+    toolTipElement.append(toolTipBody);
+    // console.log(this.hostElement.getBoundingClientRect());
+    // left,right,top,bottom,width,height 등등 볼 수 있음
+    //
+    const hostElPosLeft = this.hostElement.offsetLeft;
+    const hostElPosTop = this.hostElement.offsetTop;
+    const hostElHeight = this.hostElement.clientHeight; // client는 안쪽 접근할 때 사용
+    const parentElScrolling = this.hostElement.parentElement.scrollTop; // scrollTop은 스크롤한 양
+    console.log(parentElScrolling);
+    const x = hostElPosLeft + 20;
+    const y = hostElPosTop + hostElHeight - parentElScrolling - 10; // 스크롤된만큼 빼줌
+    // toolTipElement.offsetLeft; // 이런식으로는 읽기밖에 못함, CSS로 해야함
+    toolTipElement.style.position = 'absolute'; // 절대좌표 설정해줘야 먹힘
+    toolTipElement.style.left = x + 'px';
+    toolTipElement.style.top = y + 'px';
     toolTipElement.addEventListener('click', this.closeToolTip);
     this.element = toolTipElement;
-    this.attach();
   }
 }
 class ProjectItem {
@@ -66,11 +80,18 @@ class ProjectItem {
     this.connectSwitchBtn(this.type);
   }
   showMoreInfoHandler() {
-    // console.log(this); // 여기서 this는 button
     if (this.hasActiveToolTip) return;
-    new ToolTip(() => {
-      this.hasActiveToolTip = false;
-    }, this.id);
+    const projectElement = document.getElementById(this.id);
+    // data- 를 이용해서 DOM attribute에 원하는 데이터를 저장하거나 가져올 수 있다.
+    const toolTipText = projectElement.dataset.extraInfo;
+    const toolTip = new ToolTip(
+      () => {
+        this.hasActiveToolTip = false;
+      },
+      toolTipText,
+      this.id
+    );
+    toolTip.attach();
     this.hasActiveToolTip = true;
   }
   connectMoreInfoBtn() {
@@ -129,6 +150,16 @@ class App {
     finishedProjectList.setSwitchHandlerFunc(
       activeProjectList.addProject.bind(activeProjectList)
     );
+    const startAnalyticBtn = document.getElementById('start-analytic-btn');
+    startAnalyticBtn.addEventListener('click', this.startAnalytics);
+  }
+
+  static startAnalytics() {
+    const someScript = document.createElement('script');
+    // someScript.setAttribute('src', 'assets/scripts/dynamicLoadScript.js');
+    someScript.src = 'assets/scripts/dynamicLoadScript.js';
+    someScript.defer = true;
+    document.head.append(someScript);
   }
 }
 
