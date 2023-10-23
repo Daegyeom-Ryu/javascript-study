@@ -1,0 +1,63 @@
+header {
+  margin-bottom: 64px;
+}
+#description {
+  margin: 12px 0;
+}
+/* header p {
+  margin-bottom: 36px;
+} */
+h1 {
+  font-size: 48px;
+  color: rgb(71, 62, 62);
+  margin: 0;
+}
+/* 대표적인 인라인 태그 
+a, button, span, img
+*/
+a {
+  padding: 12px 48px;
+  background-color: rgb(167, 1, 70);
+  color: white;
+  border-radius: 4px;
+  border: 1px solid rgb(167, 1, 70);
+  font-size: 24px;
+  /* 인라인 요소에서 위아래 margin은 동작하지 않는다. 왼,오른쪽만 동작 */
+  /* 인라인 요소가 화면상에서 parent에 포함되도록 하는 방법 */
+  /* display를 block 또는 inline-block으로 설정하면 위아래 margin을 줄 수 있음 */
+  display: inline-block;
+  margin: 0;
+  /* 블록 요소 간에는 마진 겹침이 발생한다, 마진 큰쪽이 작은쪽 마진을 무시 */
+  /* 마진 겹침은 위아래만 발생 */
+  /* 블록 요소와 인라인 블록 요소 간에는 각 마진이 무시되지 않음(+된다) */
+}
+a:hover {
+  text-decoration: none;
+  background-color: rgb(180, 12, 90);
+}
+ol {
+  list-style: none;
+  font-family: 'Fira Sans', sans-serif;
+  width: 500px;
+  margin: 36px auto 0 auto;
+  padding: 0;
+}
+li {
+  margin: 32px;
+  padding: 16px;
+  background-color: rgb(223, 136, 124);
+  border-radius: 6px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+h2 {
+  color: rgb(78, 13, 5);
+  font-family: 'Oswald', sans-serif;
+}
+main p {
+  color: rgb(71, 29, 22);
+  margin: 12px;
+}
+
+.highlight-goal {
+  background-color: rgb(226, 115, 101);
+}
