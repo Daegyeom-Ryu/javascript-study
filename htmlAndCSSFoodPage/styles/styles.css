@@ -1,0 +1,160 @@
+/* px, %, em, rem */
+/* rem은 html font-size 기반, 지정 안했으면 브라우저 기본값으로 동작 */
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  background-color: rgb(44, 41, 38);
+}
+a {
+  text-decoration: none;
+}
+#main-header {
+  /* 특수한 경우지만 설정해줌 */
+  /* height: 80px; */
+  height: 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(28, 26, 24);
+  /* padding: 20px; */
+  padding: 0 5%;
+}
+#logo {
+  /* font-size: 24px; */
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgb(238, 164, 80);
+  text-transform: uppercase;
+}
+.menu-btn {
+  width: 3rem;
+  height: 3rem;
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.menu-btn span {
+  width: 100%;
+  height: 3px;
+  background-color: white;
+}
+#main-header ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+#main-header li {
+  margin: 0 1rem;
+}
+#main-header nav a {
+  color: rgb(185, 131, 41);
+  /* font-size: 20px; */
+  font-size: 1.25rem;
+}
+#main-header nav a:hover {
+  color: rgb(228, 163, 43);
+}
+#side-drawer {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(29, 26, 27);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+}
+#side-drawer:target {
+  display: block;
+}
+#side-drawer header {
+  height: 5rem;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding: 0 5%;
+}
+#side-drawer ul {
+  list-style: none;
+  margin: 0;
+  padding: 4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#side-drawer li {
+  margin: 1rem 0;
+}
+#side-drawer a {
+  color: rgb(253, 239, 213);
+  font-size: 2rem;
+}
+main h1 {
+  text-align: center;
+  color: rgb(238, 164, 80);
+  font-size: 3rem;
+}
+#latest-products {
+  width: 80%;
+  /* margin: 50px auto; */
+  margin: 2rem auto;
+}
+#latest-products ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* gap: 16px; */
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.food-item {
+  background-color: rgb(228, 206, 182);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.food-item img {
+  /* height: 240px; */
+  height: 15rem;
+  width: 100%;
+  object-fit: cover;
+}
+.food-item-content {
+  /* padding: 10%; */
+  /* padding: 0.1em; */
+  /* em과 %의 차이: 둘 다 부모 요소의 영향을 받지만, %는 부모 요소, em은 부모 요소 font-size의 영향 받음 */
+  /* padding: 16px; */
+  padding: 1rem;
+  text-align: center;
+  /* font-size: 200%; */
+}
+.food-item h2 {
+  margin: 0 0 1rem 0;
+}
+
+.btn {
+  background-color: rgb(228, 157, 44);
+  color: white;
+  border-radius: 4px;
+  /* padding: 8px 24px; */
+  padding: 0.5rem 1.5rem;
+}
+.btn:hover {
+  color: rgb(221, 134, 34);
+}
+
+@media (max-width: 48rem) {
+  #main-header nav {
+    display: none;
+  }
+  .menu-btn {
+    display: flex;
+  }
+  main h1 {
+    font-size: 1.5rem;
+  }
+  #latest-products ul {
+    grid-template-columns: 100%;
+  }
+}
+/* to do : h2 size, nav 안보이게, 모바일 픽셀을 rem으로 */
